@@ -141,7 +141,7 @@ send_raw_command:
       name: Command
       description: The command to be sent.
       required: true
-      example: "ZIA++STATUS"
+      example: "ZIA++STATUS JSON"
       selector:
         text:
 

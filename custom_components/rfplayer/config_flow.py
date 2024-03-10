@@ -78,31 +78,6 @@ class RfPlayerOptionsFlowHandler(config_entries.OptionsFlow):
         """Initialize."""
         self.config_entry = config_entry
 
-    # async def async_step_init(self, user_input: dict = None):
-    #     """Manage the options."""
-    #     log.debug("Init:%s",user_input)
- 
-    #     data = self.config_entry.data.copy()
-    #     data[CONF_AUTOMATIC_ADD] = True
-    #     data[CONF_FORMAT] = "JSON"
-    #     data[CONF_FREQ_H] = 868350
-    #     data[CONF_FREQ_L] = 433920
-    #     data[CONF_SELECTIVITY_H] = 0
-    #     data[CONF_SELECTIVITY_L] = 0
-    #     data[CONF_SENSITIVITY_H] = 4
-    #     data[CONF_SENSITIVITY_L] = 4
-    #     data[CONF_DSPTRIGGER_H] = 6
-    #     data[CONF_DSPTRIGGER_L] = 8
-    #     data[CONF_RFLINK] = 1
-    #     data[CONF_RFLINKTRIGGER_H] = 10
-    #     data[CONF_RFLINKTRIGGER_L] = 12
-    #     data[CONF_LBT] = 16
-    #     data[CONF_LEDACTIVITY] = 1
-    #     data[CONF_RECEIVER_DISABLE] = ""
-    #     data[CONF_REPEATER_DISABLE] = ""
-    #     data[CONF_TRACE] = ""
-    #     return self.async_create_entry(title=data[CONF_DEVICE], data=data)
-
     async def async_step_init(self, user_input: dict = None):
         """Manage the options."""
         log.debug("Init:%s",user_input)

@@ -65,7 +65,7 @@ TEST_FRAME_SCHEMA = vol.Schema(
     }
 )
 
-REMOVE_ENTITY_SCHEMA = vol.Schema(
+TEST_REMOVE_ENTITY_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_ID): cv.entity_id,
     }
@@ -83,11 +83,9 @@ def identify_event_type(event):
 
 
 async def async_setup_entry(hass, entry):
-    """Set up GCE RFPlayer from a config entry."""
+    """Set up ZieBlue RFPlayer from a config entry."""
     
     _LOGGER.debug("Rfplayer Set Entry %s", entry)
-    #_LOGGER.debug("Rfplayer Set Entry-Data %s", entry.data)
-    #_LOGGER.debug("Rfplayer Set Entry-Options %s", entry.options)
     config = entry.data
     options = entry.options
 
@@ -147,7 +145,6 @@ async def async_setup_entry(hass, entry):
     
     async def async_test_frame(call):
         """Test Rfplayer frame."""
-        #_LOGGER.debug("Rfplayer test frame for %s", str(call.data.get('frame')))
         hass.data[DOMAIN][RFPLAYER_PROTOCOL].handle_raw_packet(
             call.data['frame']
         )
@@ -230,7 +227,7 @@ async def async_setup_entry(hass, entry):
     )
 
     hass.services.async_register(
-        DOMAIN, SERVICE_REMOVE_ENTITY, async_remove_entry, schema=REMOVE_ENTITY_SCHEMA
+        DOMAIN, SERVICE_REMOVE_ENTITY, async_remove_entry, schema=TEST_REMOVE_ENTITY_SCHEMA
     )
 
     
@@ -239,7 +236,7 @@ async def async_setup_entry(hass, entry):
     def event_callback(event):
 
         event_type = identify_event_type(event)
-        #_LOGGER.debug("event of type %s: %s", event_type, event)
+        # _LOGGER.debug("event of type %s: %s", event_type, event)
 
         # Don't propagate non entity events (eg: version string, ack response)
         if event_type not in hass.data[DOMAIN][DATA_ENTITY_LOOKUP]:
@@ -251,13 +248,7 @@ async def async_setup_entry(hass, entry):
         #_LOGGER.debug("List of entities : %s",str(hass.data[DOMAIN]))
         entity_id = hass.data[DOMAIN][DATA_ENTITY_LOOKUP][event_type][event_id]
 
-        #_LOGGER.debug("Entity ID : %s",entity_id);
-        #_LOGGER.debug("Event ID : %s",event_id);
-
         if entity_id:
-            # Propagate event to every entity matching the device id
-            #_LOGGER.debug("passing event to %s", entity_id)
-            #_LOGGER.debug("Register available : %s",str(hass.data[DOMAIN][DATA_DEVICE_REGISTER]))
             async_dispatcher_send(
                 hass, SIGNAL_HANDLE_EVENT.format(entity_id), event)
         else:
@@ -265,15 +256,12 @@ async def async_setup_entry(hass, entry):
             if event_type in hass.data[DOMAIN][DATA_DEVICE_REGISTER]:
                 
                 _LOGGER.debug("device_id not known, adding new device")
-                _LOGGER.debug("event_type: %s",str(event_type))
-                _LOGGER.debug("event_id: %s",str(event_id))
-                _LOGGER.debug("event: %s",str(event))
-                #_LOGGER.debug(str(hass.data[DOMAIN][DATA_DEVICE_REGISTER]))
-                #_LOGGER.debug(str(hass.data[DOMAIN][DATA_DEVICE_REGISTER][event_type]))
-                
+                # _LOGGER.debug("event_type: %s",str(event_type))
+                # _LOGGER.debug("event_id: %s",str(event_id))
+                # _LOGGER.debug("event: %s",str(event))
+
                 hass.data[DOMAIN][DATA_ENTITY_LOOKUP][event_type][event_id] = event
                 _add_device_to_base_config(event, event_id)
-                #_LOGGER.debug("calling: %s","hass.data["+DOMAIN+"]["+DATA_DEVICE_REGISTER+"]["+event_type+"]")
                 if inspect.isfunction(hass.data[DOMAIN][DATA_DEVICE_REGISTER][event_type]):
                     hass.async_create_task(
                         hass.data[DOMAIN][DATA_DEVICE_REGISTER][event_type](event)
@@ -335,7 +323,7 @@ async def async_setup_entry(hass, entry):
         #     options={'START_COMMANDS':["1 FORMAT JSON . RECEIVER + *. SENSITIVITY L 0. SENSITIVITY H 0. SELECTIVITY L 0. SELECTIVITY H 0. RFLINK 1. RFLINKTRIGGER L 0. RFLINKTRIGGER H 0. LBT 16. STATUS JSON"]},
         # )
             options={'START_COMMANDS':[
-                             "FORMAT JSON",
+                            "FORMAT JSON",
                             ReceiverCommand,
                             RepeaterCommand,
                             TraceCommand,
