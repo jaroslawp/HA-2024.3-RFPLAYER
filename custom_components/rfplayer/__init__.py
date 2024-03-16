@@ -323,23 +323,23 @@ async def async_setup_entry(hass, entry):
         #     options={'START_COMMANDS':["1 FORMAT JSON . RECEIVER + *. SENSITIVITY L 0. SENSITIVITY H 0. SELECTIVITY L 0. SELECTIVITY H 0. RFLINK 1. RFLINKTRIGGER L 0. RFLINKTRIGGER H 0. LBT 16. STATUS JSON"]},
         # )
             options={'START_COMMANDS':[
-                            "FORMAT JSON",
+                            "FORMAT "+str(options.get(CONF_FORMAT,"JSON")),
                             ReceiverCommand,
                             RepeaterCommand,
                             TraceCommand,
-                            "FREQ L 433920",
-                            "FREQ H 868350",
-                            "SELECTIVITY L 0",
-                            "SELECTIVITY H 0",
-                            "SENSITIVITY L 4",
-                            "SENSITIVITY H 4",
-                            "DSPTRIGGER L 8",
-                            "DSPTRIGGER H 6",
-                            "RFLINKTRIGGER L 10",
-                            "RFLINKTRIGGER H 18",
-                            "RFLINK 1",
-                            "LBT 16",
-                            "LEDACTIVITY 1",
+                            "FREQ L "+str(options.get(CONF_FREQ_L,433920)),
+                            "FREQ H "+str(options.get(CONF_FREQ_H,868350)),
+                            "SELECTIVITY L "+str(options.get(CONF_SELECTIVITY_L,0)),
+                            "SELECTIVITY H "+str(options.get(CONF_SELECTIVITY_H,0)),
+                            "SENSITIVITY L "+str(options.get(CONF_SENSITIVITY_L,4)),
+                            "SENSITIVITY H "+str(options.get(CONF_SENSITIVITY_H,4)),
+                            "DSPTRIGGER L "+str(options.get(CONF_DSPTRIGGER_L,8)),
+                            "DSPTRIGGER H "+str(options.get(CONF_DSPTRIGGER_H,6)),
+                            "RFLINKTRIGGER L "+str(options.get(CONF_RFLINKTRIGGER_L,10)),
+                            "RFLINKTRIGGER H "+str(options.get(CONF_RFLINKTRIGGER_H,18)),
+                            "RFLINK "+str(int(options.get(CONF_RFLINK,True) == True)),
+                            "LBT "+str(options.get(CONF_LBT,16)),
+                            "LEDACTIVITY "+str(int(options.get(CONF_LEDACTIVITY,True) == True)),
                             "STATUS JSON"
                         ]
             },
@@ -406,9 +406,11 @@ async def async_unload_entry(hass, entry):
     await hass.config_entries.async_forward_entry_unload(entry, "sensor")
     await hass.config_entries.async_forward_entry_unload(entry, "cover")
     await hass.config_entries.async_forward_entry_unload(entry, "command")
+    await hass.config_entries.async_forward_entry_unload(entry, "switch")
+    await hass.config_entries.async_forward_entry_unload(entry, "number")
     hass
-    #await hass.config_entries.async_unload_platforms(entry, "sensor")
-    return True
+    # hass.async_create_task(connect())
+    return False
     
 
 async def async_remove_entry(hass, entry) -> None:
@@ -572,8 +574,7 @@ class RfplayerDevice(RestoreEntity):
     async def async_will_remove_from_hass(self):
         """Clean when entity removed."""
         await super().async_will_remove_from_hass()
-##        device_registry = await async_get_registry(self.hass)
-        device_registry = dr.async_get(hass)
+        device_registry = dr.async_get(self.hass)
         device = device_registry.async_get_device(
             (DOMAIN, self.hass.data[DOMAIN]
              [CONF_DEVICE] + "_" + self._attr_unique_id)
