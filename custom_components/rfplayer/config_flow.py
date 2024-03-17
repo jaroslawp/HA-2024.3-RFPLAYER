@@ -158,7 +158,7 @@ class RfPlayerOptionsFlowHandler(config_entries.OptionsFlow):
                 data_schema=vol.Schema(Init_Schema),
             )
         else:
-""" REPRISE DE LA CONFIGURATION SI MODIFICATION PAR USER SAUVEGARDE AU REBOOT """
+## REPRISE DE LA CONFIGURATION SI MODIFICATION PAR USER SAUVEGARDE AU REBOOT ##
             data = self.config_entry.data.copy()
             data[CONF_AUTOMATIC_ADD] = user_input.get(CONF_AUTOMATIC_ADD,False)
             data[CONF_FORMAT] = user_input.get(CONF_FORMAT,"JSON")
