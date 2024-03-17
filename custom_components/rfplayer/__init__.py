@@ -409,7 +409,6 @@ async def async_unload_entry(hass, entry):
     await hass.config_entries.async_forward_entry_unload(entry, "switch")
     await hass.config_entries.async_forward_entry_unload(entry, "number")
     hass
-    # hass.async_create_task(connect())
     return False
     
 
