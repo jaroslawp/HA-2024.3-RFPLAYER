@@ -341,6 +341,7 @@ def infoType_11_decode(infos:list,allowEmptyID:bool=False) -> list:
     fields_found["subType"]=infos.get("subTypeMeaning")
     if fields_found["subType"] == None or fields_found["subType"] == "" : fields_found["subType"]=infos.get("subType")
     fields_found["qualifier"]=infos["qualifier"]
+    fields_found["flags"]=''
 
     elements={'functionMeaning':'','stateMeaning':'','modeMeaning':'','d0':'','d1':'','d2':'','d3':''}
     for measure,value in infos.items():
@@ -350,6 +351,7 @@ def infoType_11_decode(infos:list,allowEmptyID:bool=False) -> list:
                 fields_found[measure+'_unit']= elements[measure]
 
     if 'flags' in infos['qualifierMeaning']:
+        fields_found['flags']=",".join(infos['qualifierMeaning']['flags'])
         for flag in infos['qualifierMeaning']['flags']:
             fields_found[flag]=1
 

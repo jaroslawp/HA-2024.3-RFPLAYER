@@ -44,6 +44,8 @@ PACKET_FIELDS = {
     "fnc":"functionMeaning",
     "sta":"stateMeaning",
     "mod":"modeMeaning",
+    "qua":"qualifier",
+    "fla":"flags",
     "d0":"d0",
     "d1":"d1",
     "d2":"d2",
